@@ -997,6 +997,27 @@ export function _isPatternInclude(pattern: string, flipNegate: boolean): boolean
         (negateCount % 2 == 1 && flipNegate);
 }
 
+/**
+ * Sorts match patterns - included first and excluded after it
+ * This is necessary to exclude patterns from previously included
+ * @param patterns array of match patterns
+ * @param flipNegate should negation be flipped or not
+ */
+export function _sortPatterns(patterns: string[], flipNegate: boolean): string[] {
+    const includePatterns: string[] = [];
+    const excludePatterns: string[] = [];
+
+    patterns.forEach((pattern: string) => {
+        if (_isPatternInclude(pattern, flipNegate)) {
+            includePatterns.push(pattern);
+        } else {
+            excludePatterns.push(pattern);
+        }
+    });
+
+    return includePatterns.concat(excludePatterns);
+}
+
 // We store the encryption key on disk and hold the encrypted content and key file in memory
 // return base64encoded<keyFilePath>:base64encoded<encryptedContent>
 // downstream vsts-node-api will retrieve the secret later

@@ -1332,6 +1332,8 @@ export function match(list: string[], patterns: string[] | string, patternRoot?:
     // hashtable to keep track of matches
     let map: { [item: string]: boolean } = {};
 
+    patterns = im._sortPatterns(patterns, !!options.flipNegate);
+
     let originalOptions = options;
     for (let pattern of patterns) {
         debug(`pattern: '${pattern}'`);
