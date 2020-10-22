@@ -1356,21 +1356,10 @@ export function match(list: string[], patterns: string[] | string, patternRoot?:
         options.nocomment = true;
 
         // determine whether pattern is include or exclude
-        let negateCount = 0;
+        let isIncludePattern: boolean = true;
         if (!options.nonegate) {
-            while (pattern.charAt(negateCount) == '!') {
-                negateCount++;
-            }
-
-            pattern = pattern.substring(negateCount); // trim leading '!'
-            if (negateCount) {
-                debug(`trimmed leading '!'. pattern: '${pattern}'`);
-            }
+            isIncludePattern = im._isPatternInclude(pattern, !!options.flipNegate);
         }
-
-        let isIncludePattern = negateCount == 0 ||
-            (negateCount % 2 == 0 && !options.flipNegate) ||
-            (negateCount % 2 == 1 && options.flipNegate);
 
         // set nonegate - brace expansion could result in a leading '!'
         options.nonegate = true;

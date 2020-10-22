@@ -976,6 +976,27 @@ export function _exposeCertSettings(): void {
     }
 }
 
+/**
+ * Returns true if pattern is include, otherwise - return false
+ * @param pattern match pattern to apply
+ * @param flipNegate should negation be flipped or not
+ */
+export function _isPatternInclude(pattern: string, flipNegate: boolean): boolean {
+    let negateCount = 0;
+    while (pattern.charAt(negateCount) == '!') {
+        negateCount++;
+    }
+
+    pattern = pattern.substring(negateCount); // trim leading '!'
+    if (negateCount) {
+        _debug(`trimmed leading '!'. pattern: '${pattern}'`);
+    }
+
+    return negateCount == 0 ||
+        (negateCount % 2 == 0 && !flipNegate) ||
+        (negateCount % 2 == 1 && flipNegate);
+}
+
 // We store the encryption key on disk and hold the encrypted content and key file in memory
 // return base64encoded<keyFilePath>:base64encoded<encryptedContent>
 // downstream vsts-node-api will retrieve the secret later
